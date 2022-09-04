@@ -132,7 +132,8 @@ public class DataStorage
         return null;
     }
 
-    public void saveAllData(UUID uuid,String discordID,int balance)  {
+    public void saveAllData(UUID uuid,String discordID,int balance)
+    {
         try{
             if(exists(uuid))
             {
@@ -149,7 +150,8 @@ public class DataStorage
         }
     }
 
-    public void saveBalance(UUID uuid, int balance) {
+    public void saveBalance(UUID uuid, int balance)
+    {
         try{
             if(exists(uuid))
             {
@@ -165,7 +167,8 @@ public class DataStorage
         }
     }
 
-    public void saveDiscordID(UUID uuid, String discordID) {
+    public void saveDiscordID(UUID uuid, String discordID)
+    {
         try{
             if(exists(uuid))
             {

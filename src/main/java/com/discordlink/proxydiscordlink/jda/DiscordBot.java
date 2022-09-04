@@ -30,6 +30,7 @@ public class DiscordBot {
         try
         {
             jda = JDABuilder.createDefault(token).build();
+            jda.addEventListener(new JDAListener());
             jda.awaitReady();
         } catch (LoginException e) {
             throw new RuntimeException(e);

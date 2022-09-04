@@ -4,6 +4,16 @@
 #                                                    #
 ######################################################
 
+# Impostare i server nel seguente modo per
+# far eseguire i comandi
+#
+#
+#  servers:
+#    <pterodactyl server id>: <bungeecord name>
+#
+# Rimuovi il commento alla riga seguente per usare
+#servers:
+
 # Impostare i ruoli nel seguente modo per
 # i ruoli da sincronizzare con discord
 #
