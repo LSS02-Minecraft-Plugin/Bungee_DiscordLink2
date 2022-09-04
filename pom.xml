@@ -90,12 +90,17 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.28</version>
+            <version>8.0.30</version>
         </dependency>
         <dependency>
             <groupId>com.github.Carleslc.Simple-YAML</groupId>
             <artifactId>Simple-Yaml</artifactId>
             <version>1.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.stanjg</groupId>
+            <artifactId>Ptero4J</artifactId>
+            <version>master-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
