@@ -1,0 +1,4 @@
+name: ProxyDiscordLink
+version: '${project.version}'
+main: com.discordlink.proxydiscordlink.ProxyDiscordLink
+description: Sincronizzazione minecraft con discord

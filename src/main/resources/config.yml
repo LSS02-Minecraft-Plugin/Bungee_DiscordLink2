@@ -1,0 +1,45 @@
+######################################################
+#                                                    #
+#                 General Settings                   #
+#                                                    #
+######################################################
+
+# Impostare i ruoli nel seguente modo per
+# i ruoli da sincronizzare con discord
+#
+#  roles:
+#    <in-game name role>: <discord id>
+#    <in-game name role>: <discord id>
+#
+# Rimuovi il commento alla riga seguente per usare
+#roles:
+
+
+######################################################
+#                                                    #
+#                BungeeCord Settings                 #
+#                                                    #
+######################################################
+
+
+
+
+######################################################
+#                                                    #
+#               Discord Bot Settings                 #
+#                                                    #
+######################################################
+
+# Inserisci qui il token bot
+token-bot: "empty"
+
+# Impostazioni pannello discord
+link-panel:
+  # Id della camera dove inviare il pannello
+  channelid: "empty"
+  use-embed: true
+  text:
+    - ":white_check_mark: per linkarti"
+    - ":cyclone: per sincronizzarti"
+  link-emoji: "white_check_mark"
+  sync-emoji: "cyclone"

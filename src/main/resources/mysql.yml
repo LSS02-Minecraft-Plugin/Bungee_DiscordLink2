@@ -1,0 +1,10 @@
+host: localhost
+port: 3306
+user: "root"
+password: "empty"
+database: "DiscordLink"
+options: ""
+table_name: "DiscordLinkData"
+uuid_field: "uuid"
+discordid_field: "discord_id"
+balance_field: "balance"
