@@ -1,48 +1,44 @@
 package com.discordlink.proxydiscordlink.pterodactyl;
 
 import com.discordlink.proxydiscordlink.ProxyDiscordLink;
-import com.stanjg.ptero4j.PteroAdminAPI;
+import com.stanjg.ptero4j.PteroUserAPI;
 import com.stanjg.ptero4j.controllers.user.UserServersController;
-import com.stanjg.ptero4j.entities.panel.admin.Server;
-import com.stanjg.ptero4j.entities.panel.admin.User;
-import com.stanjg.ptero4j.entities.panel.user.UserServer;
 import net.md_5.bungee.api.ProxyServer;
 
-import java.lang.reflect.Proxy;
 import java.util.UUID;
 
 public class Pterodactyl
 {
 
-    private PteroAdminAPI api;
-    private UserServersController controller;
+    private final UserServersController controller;
 
     public Pterodactyl(String url,String apikey)
     {
         if(url.equals("empty"))
         {
             System.err.println("Errore durante la lettura dell'url del tuo pannello pterodactyl. Inserisci qui il tuo url per usare il plugin");
+            ProxyServer.getInstance().stop();
         }
         if(apikey.equals("empty"))
         {
-            System.err.println("Errore durante la lettura dell'application api key. Inseriscilo per usare il plugin");
+            System.err.println("Errore durante la lettura della client api key. Inseriscilo per usare il plugin");
             ProxyServer.getInstance().stop();
         }
-        api = new PteroAdminAPI(url,apikey);
-        //controller = api.getServersController();
+        controller = new PteroUserAPI(url,apikey).getServersController();
     }
 
     public void executeCommand(String server_id,String cmd,String name,String group)
     {
         if(cmd.contains("%player%")) cmd = cmd.replace("%player%",name);
-        if(cmd.contains("%group%")) cmd = cmd.replace("%group%",group);
+        if(cmd.contains("%group%") && (group != null)) cmd = cmd.replace("%group%",group);
         controller.getServer(server_id).sendCommand(cmd);
     }
 
     public void executeCommands(UUID uuid,String group,ExecCmdType type)
     {
         if(!ProxyDiscordLink.config.contains("servers")) return;
-        String name = ProxyServer.getInstance().getPlayer(uuid).getName();
+        if(group == null) return;
+        String name = ProxyDiscordLink.data.getUsername(uuid);
         for(String server_id : ProxyDiscordLink.config.getStringList("servers"))
         {
             if(type == ExecCmdType.LINK)
@@ -50,7 +46,7 @@ public class Pterodactyl
                 if(ProxyDiscordLink.config.getStringList("link-commands").isEmpty()) continue;
                 for(String cmd : ProxyDiscordLink.config.getStringList("link-commands"))
                 {
-                    executeCommand(server_id,cmd,name,group);
+                    executeCommand(server_id,cmd,name,null);
                 }
             }
             if(type == ExecCmdType.UNLINK)
@@ -58,7 +54,7 @@ public class Pterodactyl
                 if(ProxyDiscordLink.config.getStringList("unlink-commands").isEmpty()) continue;
                 for(String cmd : ProxyDiscordLink.config.getStringList("unlink-commands"))
                 {
-                    executeCommand(server_id,cmd,name,group);
+                    executeCommand(server_id,cmd,name,null);
                 }
             }
             if(type == ExecCmdType.ADD)

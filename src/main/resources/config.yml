@@ -48,6 +48,13 @@ addGroupCommand: "lp user %player% parent add %group%"
 # %group% --> eventuale gruppo da aggiungere
 removeGroupCommand: "lp user %player% parent remove %group%"
 
+# Configurazione chat e console
+# chats:
+#   <bungeecord server name>: <discord chat id>
+#
+# Rimuovi il commento per usare
+#chats:
+
 
 ######################################################
 #                                                    #
@@ -66,6 +73,18 @@ link-panel:
   link-emoji: "white_check_mark"
   sync-emoji: "cyclone"
 
+# Categoria dove vengono create le camere per il linking
+category-link-id: "empty"
+
+# Ruolo staff che può vedere i canali dei player che si devono linkare
+staff-role: "empty"
+
+# Messaggio che viene inviato nella camera dove il giocatore deve linkarsi
+link-player-message: "%mention% invia il tuo nickname di minecraft per linkarti. \\nAttenzione: Per poterti verificare devi essere entrato almeno una volta nel server minecraft"
+
+# Username non trovato
+invalid-username: "Il tuo username non è tra i giocatori del server. Riprova"
+
 
 ######################################################
 #                                                    #
@@ -76,7 +95,7 @@ link-panel:
 # Inserisci qui l'url del tuo pannello pterodactyl
 ptero-url: "empty"
 
-# Inserisci qui l'application api key
+# Inserisci qui la client api key
 ptero-api-key: "empty"
 
 # Impostare i server nel seguente modo per
@@ -88,3 +107,4 @@ ptero-api-key: "empty"
 #
 # Rimuovi il commento alla riga seguente per usare
 #servers:
+
