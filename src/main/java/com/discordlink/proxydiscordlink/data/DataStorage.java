@@ -50,6 +50,7 @@ public class DataStorage
         try
         {
             ResultSet result = connection.prepareStatement("SELECT "+discordID_field+" FROM "+table_name+" WHERE "+discordID_field+"=\""+discordID+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
+            if(result == null) return false;
             if(countRows(result) == 1) return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -62,6 +63,7 @@ public class DataStorage
         try
         {
             ResultSet result = connection.prepareStatement("SELECT "+username_field+" FROM "+table_name+" WHERE "+username_field+"=\""+username+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
+            if(result == null) return false;
             if(countRows(result) == 1) return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -74,6 +76,7 @@ public class DataStorage
         try
         {
             ResultSet result = connection.prepareStatement("SELECT "+uuid_field+" FROM "+table_name+" WHERE "+uuid_field+"=\""+uuid.toString()+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
+            if(result == null) return false;
             if(countRows(result) == 1) return true;
         } catch (SQLException e) {
             throw new RuntimeException(e);
