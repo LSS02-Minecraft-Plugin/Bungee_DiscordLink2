@@ -23,9 +23,8 @@ public class JDAListener extends ListenerAdapter
         Member member = event.getMember();
         if(member == null) return;
         MessageReaction reaction = event.getReaction();
-        if(reaction == null) return;
 
-        if(reaction.getEmoji() == Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.link-emoji")))
+        if(reaction.getEmoji().equals(Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.link-emoji"))))
         {
 
             Category cat = DiscordBot.guild.getCategoryById(ProxyDiscordLink.config.getString("category-link-id"));
@@ -41,7 +40,7 @@ public class JDAListener extends ListenerAdapter
             reaction.removeReaction().complete();
         }
 
-        if(reaction.getEmoji() == Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.sync-emoji")))
+        if(reaction.getEmoji().equals(Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.sync-emoji"))))
         {
             if(!ProxyDiscordLink.data.exists(member.getId())) return;
             ProxyDiscordLink.sync(ProxyDiscordLink.data.getUUID(member.getId()));

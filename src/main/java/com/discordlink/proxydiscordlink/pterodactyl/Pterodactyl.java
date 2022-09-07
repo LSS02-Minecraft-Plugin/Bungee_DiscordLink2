@@ -1,16 +1,15 @@
 package com.discordlink.proxydiscordlink.pterodactyl;
 
 import com.discordlink.proxydiscordlink.ProxyDiscordLink;
-import com.stanjg.ptero4j.PteroUserAPI;
-import com.stanjg.ptero4j.controllers.user.UserServersController;
+import com.mattmalec.pterodactyl4j.PteroBuilder;
+import com.mattmalec.pterodactyl4j.client.entities.PteroClient;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.util.UUID;
 
 public class Pterodactyl
 {
-
-    private final UserServersController controller;
+    private final PteroClient api;
 
     public Pterodactyl(String url,String apikey)
     {
@@ -24,14 +23,15 @@ public class Pterodactyl
             System.err.println("Errore durante la lettura della client api key. Inseriscilo per usare il plugin");
             ProxyServer.getInstance().stop();
         }
-        controller = new PteroUserAPI(url,apikey).getServersController();
+        api = PteroBuilder.createClient(url, apikey);
     }
 
     public void executeCommand(String server_id,String cmd,String name,String group)
     {
         if(cmd.contains("%player%")) cmd = cmd.replace("%player%",name);
         if(cmd.contains("%group%") && (group != null)) cmd = cmd.replace("%group%",group);
-        controller.getServer(server_id).sendCommand(cmd);
+        String finalCMD = cmd;
+        api.retrieveServerByIdentifier(server_id).flatMap(clientServer -> clientServer.sendCommand(finalCMD)).executeAsync();
     }
 
     public void executeCommands(UUID uuid,String group,ExecCmdType type)
