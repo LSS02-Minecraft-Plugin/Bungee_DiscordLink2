@@ -1,7 +1,5 @@
 package com.discordlink.proxydiscordlink;
 
-import com.discordlink.proxydiscordlink.data.DataStorage;
-import com.discordlink.proxydiscordlink.events.ProxyEvents;
 import com.discordlink.proxydiscordlink.jda.DiscordBot;
 import com.discordlink.proxydiscordlink.pterodactyl.ExecCmdType;
 import com.discordlink.proxydiscordlink.pterodactyl.Pterodactyl;
@@ -92,6 +90,10 @@ public final class ProxyDiscordLink extends Plugin {
                 if(member.getRoles().contains(DiscordBot.guild.getRoleById(ProxyDiscordLink.linkingRoles.get(rolename))))
                 {
                     ProxyDiscordLink.ptero.executeCommands(uuid,rolename, ExecCmdType.ADD);
+                }
+                else
+                {
+                    ProxyDiscordLink.ptero.executeCommands(uuid,rolename,ExecCmdType.REMOVE);
                 }
             }
         });

@@ -37,7 +37,6 @@ public class Pterodactyl
     public void executeCommands(UUID uuid,String group,ExecCmdType type)
     {
         if(!ProxyDiscordLink.config.contains("servers")) return;
-        if(group == null) return;
         String name = ProxyDiscordLink.data.getUsername(uuid);
         for(String server_id : ProxyDiscordLink.config.getStringList("servers"))
         {
@@ -45,14 +44,6 @@ public class Pterodactyl
             {
                 if(ProxyDiscordLink.config.getStringList("link-commands").isEmpty()) continue;
                 for(String cmd : ProxyDiscordLink.config.getStringList("link-commands"))
-                {
-                    executeCommand(server_id,cmd,name,null);
-                }
-            }
-            if(type == ExecCmdType.UNLINK)
-            {
-                if(ProxyDiscordLink.config.getStringList("unlink-commands").isEmpty()) continue;
-                for(String cmd : ProxyDiscordLink.config.getStringList("unlink-commands"))
                 {
                     executeCommand(server_id,cmd,name,null);
                 }

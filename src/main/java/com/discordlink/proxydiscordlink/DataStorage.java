@@ -1,4 +1,4 @@
-package com.discordlink.proxydiscordlink.data;
+package com.discordlink.proxydiscordlink;
 
 import net.md_5.bungee.api.ProxyServer;
 import org.simpleyaml.configuration.file.YamlFile;
@@ -47,6 +47,7 @@ public class DataStorage
 
     public boolean exists(String discordID)
     {
+        if(discordID.equals("-1")) return false;
         try
         {
             ResultSet result = connection.prepareStatement("SELECT "+discordID_field+" FROM "+table_name+" WHERE "+discordID_field+"=\""+discordID+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
@@ -87,7 +88,7 @@ public class DataStorage
     public int getBalance(String discordID)
     {
         try{
-            ResultSet result = connection.prepareStatement("SELECT "+discordID_field+" FROM "+table_name+" WHERE "+discordID_field+"=\""+discordID+"\";", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE).executeQuery();
+            ResultSet result = connection.prepareStatement("SELECT "+balance_field+" FROM "+table_name+" WHERE "+discordID_field+"=\""+discordID+"\";", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE).executeQuery();
             int rows = countRows(result);
             if(rows == 1)
             {
@@ -116,6 +117,23 @@ public class DataStorage
         return -1;
     }
 
+    public String getDiscordID(String username)
+    {
+        try{
+            ResultSet result = connection.prepareStatement("SELECT "+discordID_field+" FROM "+table_name+" WHERE "+username_field+"=\""+username+"\";", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE).executeQuery();
+            int rows = countRows(result);
+            if(rows == 1)
+            {
+                String ret = result.getString(discordID_field);
+                if(!ret.equals("-1")) return ret;
+            }
+        }catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        return "-1";
+    }
+
     public String getDiscordID(UUID uuid)
     {
         try{
@@ -130,7 +148,7 @@ public class DataStorage
         {
             e.printStackTrace();
         }
-        return null;
+        return "-1";
     }
     public String getUsername(UUID uuid)
     {
@@ -139,7 +157,7 @@ public class DataStorage
             int rows = countRows(result);
             if(rows == 1)
             {
-                return result.getString(discordID_field);
+                return result.getString(username_field);
             }
         }catch(SQLException e)
         {
@@ -204,7 +222,10 @@ public class DataStorage
         try{
             if(exists(uuid))
             {
-                connection.prepareStatement("UPDATE "+table_name+" SET "+balance_field+"=\""+ balance +"\" WHERE "+uuid_field+"=\""+uuid.toString()+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeUpdate();
+                if(getBalance(uuid) != balance)
+                {
+                    connection.prepareStatement("UPDATE "+table_name+" SET "+balance_field+"=\""+ balance +"\" WHERE "+uuid_field+"=\""+uuid.toString()+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeUpdate();
+                }
             }
             else
             {
@@ -221,7 +242,10 @@ public class DataStorage
         try{
             if(exists(uuid))
             {
-                connection.prepareStatement("UPDATE "+table_name+" SET "+discordID_field+"=\""+discordID+"\" WHERE "+uuid_field+"=\""+uuid.toString()+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeUpdate();
+                if(!getDiscordID(uuid).equals(discordID))
+                {
+                    connection.prepareStatement("UPDATE "+table_name+" SET "+discordID_field+"=\""+discordID+"\" WHERE "+uuid_field+"=\""+uuid.toString()+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeUpdate();
+                }
             }
             else
             {
@@ -238,7 +262,10 @@ public class DataStorage
         try{
             if(existsName(username))
             {
-                connection.prepareStatement("UPDATE "+table_name+" SET "+discordID_field+"=\""+discordID+"\" WHERE UUID=\""+getUUIDfN(username)+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeUpdate();
+                if(!getDiscordID(username).equals(discordID))
+                {
+                    connection.prepareStatement("UPDATE "+table_name+" SET "+discordID_field+"=\""+discordID+"\" WHERE UUID=\""+getUUIDfN(username)+"\";", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeUpdate();
+                }
             }
             else
             {
@@ -277,7 +304,7 @@ public class DataStorage
             username_field = mysql.getString("username_field");
             discordID_field = mysql.getString("discordid_field");
             balance_field = mysql.getString("balance_field");
-            connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+table_name+"("+uuid_field+" VARCHAR(36) NOT NULL UNIQUE,"+discordID_field+" VARCHAR(20) UNIQUE,"+balance_field+" Integer);").execute();
+            connection.prepareStatement("CREATE TABLE IF NOT EXISTS "+table_name+"("+uuid_field+" VARCHAR(36) NOT NULL UNIQUE, "+username_field+" VARCHAR(20), "+discordID_field+" VARCHAR(20),"+balance_field+" Integer, PRIMARY KEY ("+uuid_field+"));").execute();
         } catch (SQLException e)
         {
             throw new RuntimeException(e);

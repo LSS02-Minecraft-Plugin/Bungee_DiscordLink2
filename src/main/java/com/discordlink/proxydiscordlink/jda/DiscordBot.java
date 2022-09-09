@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.md_5.bungee.api.ProxyServer;
 
 import javax.security.auth.login.LoginException;
@@ -22,7 +24,6 @@ public class DiscordBot {
             ProxyServer.getInstance().stop();
         }
         setup(token_bot);
-        DiscordBot.guild = getJDA().getGuilds().get(0);
     }
 
     public JDA getJDA()
@@ -36,7 +37,10 @@ public class DiscordBot {
         {
             JDABuilder builder = JDABuilder.createDefault(token);
             builder.addEventListeners(new JDAListener());
-            jda = builder.build().awaitReady();
+            builder.enableIntents(GatewayIntent.MESSAGE_CONTENT);
+            jda = builder.build();
+            jda.awaitReady();
+            DiscordBot.guild = getJDA().getGuilds().get(0);
 
             if(ProxyDiscordLink.config.getString("category-link-id").equals("empty"))
             {
@@ -56,11 +60,20 @@ public class DiscordBot {
                 String messageid = ProxyDiscordLink.config.getString("link-panel.messageid");
                 if(!messageid.equals("empty"))
                 {
-                    Guild guild = jda.getGuilds().get(0);
-                    guild.getTextChannelById(channelid).addReactionById(messageid, Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.link-emoji"))).complete();
-                    guild.getTextChannelById(channelid).addReactionById(messageid, Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.sync-emoji"))).complete();
+                    DiscordBot.guild.getTextChannelById(channelid).addReactionById(messageid, Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.link-emoji"))).queue();
+                    DiscordBot.guild.getTextChannelById(channelid).addReactionById(messageid, Emoji.fromUnicode(ProxyDiscordLink.config.getString("link-panel.sync-emoji"))).queue();
                 }
             }
+
+            DiscordBot.guild.upsertCommand("reiatsu","Mostra i reiatsu posseduti").queue();
+            DiscordBot.guild.upsertCommand("areiatsu","Administrator commands")
+                    .addOption(OptionType.STRING,"action","<add | remove | set >",true)
+                    .addOption(OptionType.STRING,"userid","Id dell'utente su cui operare",true)
+                    .addOption(OptionType.INTEGER,"amount","Numero di reiatsu",true)
+                    .queue();
+            DiscordBot.guild.upsertCommand("showreiatsu","Mostra i reiatsu di un utente")
+                    .addOption(OptionType.STRING,"userid","Utente",true)
+                    .queue();
 
         } catch (LoginException | InterruptedException e) {
             throw new RuntimeException(e);
